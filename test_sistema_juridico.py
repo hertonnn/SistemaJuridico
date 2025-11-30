@@ -20,14 +20,11 @@ class TestSistemaJuridico(unittest.TestCase):
         Testa o Padrão Observer.
         Verifica se o advogado (Observer) recebe notificação quando o processo (Subject) é movimentado.
         """
-        # 1. Anexar o advogado como observador do processo
         self.processo.anexar(self.advogado)
-        
-        # 2. Adicionar um trâmite (deve disparar notificação)
         tramite = Tramite("Despacho", "Aguardando manifestação")
         self.processo.adicionar_tramite(tramite)
         
-        # 3. Asserção: Verificar se a notificação chegou na lista do advogado
+        # Teste
         self.assertIn(
             f"Novo trâmite no processo {self.processo.numero}: Despacho", 
             self.advogado.notificacoes,
@@ -41,14 +38,12 @@ class TestSistemaJuridico(unittest.TestCase):
         """
         decisao = Decisao(resultado="Procedente", texto_integral="O réu deve pagar indenização.")
         
-        # O juiz julga o processo
         self.juiz.julgar(self.processo, decisao)
         
-        # Verificações
+        # Testes
         self.assertEqual(self.processo.status, "Encerrado", "O processo deveria estar com status Encerrado após julgamento.")
         self.assertIsNotNone(self.processo.data_encerramento, "A data de encerramento não foi registrada.")
         
-        # Verifica se o trâmite de julgamento foi adicionado
         ultimo_tramite = self.processo.tramites[-1]
         self.assertEqual(ultimo_tramite.tipo, "Julgamento")
         self.assertIn("Procedente", ultimo_tramite.descricao)
@@ -59,7 +54,6 @@ class TestSistemaJuridico(unittest.TestCase):
         """
         tramite = Tramite("Petição", "Petição inicial do autor")
         
-        # O trâmite cria o documento (Factory)
         doc = tramite.gerar_documento("PDF", "Conteúdo binário simulado")
         
         self.assertEqual(doc.tipo, "PDF")
